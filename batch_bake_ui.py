@@ -28,6 +28,7 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
         cbk = scene.render.bake
         ob = context.active_object
         bbake = ob.bbake
+        ob_settings = bbake.ob_settings
 
         col = layout.column()
 
@@ -36,38 +37,35 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
         row.operator('scene.bbake_bake_selected', icon='RENDER_STILL', text='Bake All Objects').all=True
         col.separator()
         col.separator()
-        col.prop(bbake, 'use', text='Bake this object ("%s")' %ob.name, toggle=0)
+        col.prop(ob_settings, 'use', text='Bake this object ("%s")' %ob.name, toggle=0)
 
-        if ob.bbake.use:
+        if ob_settings.use:
             ### SELECTED TO ACTIVE SETTINGS
             box = col.box()
-            box.prop(ob.bbake, 'path')
+            box.prop(ob_settings, 'path')
             row = box.row()
-            row.prop(ob.bbake, 'use_selected_to_active')
-            if ob.bbake.use_selected_to_active:
-                if ob.bbake.sources:
-                    sources = [s.strip() for s in ob.bbake.sources.split(',')]
+            row.prop(ob_settings, 'use_selected_to_active')
+            if ob_settings.use_selected_to_active:
+                if ob_settings.sources:
+                    sources = [s.strip() for s in ob_settings.sources.split(',')]
                     if len(sources) == 1:
-                        row.prop(ob.bbake, 'align')
+                        row.prop(ob_settings, 'align')
 
                 row = box.row()
-                row.prop(ob.bbake, 'use_cage')
-                if ob.bbake.use_cage:
-                    row.prop(ob.bbake, 'cage_object', icon='OBJECT_DATAMODE')
+                row.prop(ob_settings, 'use_cage')
+                if ob_settings.use_cage:
+                    row.prop(ob_settings, 'cage_object', icon='OBJECT_DATAMODE')
 
                 row=box.row()
-                row.prop(ob.bbake, 'cage_extrusion')
+                row.prop(ob_settings, 'cage_extrusion')
 
                 subbox = box.box()
                 row=subbox.row()
                 row.label('Source Objects:')
                 row.operator('object.set_bbake_sources', icon='FORWARD', text='Set Sources')
                 row=subbox.row()
-                if ob.bbake.sources:
-                    row.prop(ob.bbake, 'sources', text='')
-                    #sources = [s.strip() for s in ob.bbake.sources.split(',')]
-                    #for s in sources:
-                    #    row.label('"%s"'%s)
+                if ob_settings.sources:
+                    row.prop(ob_settings, 'sources', text='')
 
             ### AOVs SETTINGS
             box = col.box()

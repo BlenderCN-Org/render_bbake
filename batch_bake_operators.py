@@ -293,21 +293,24 @@ class BBake_Bake_Selected(Operator):
 ###########################################################################
 def bbake_set_sources(self, context):
     active = context.active_object
+    ob_settings = active.bbake.ob_settings
+
     if self.clear:
-        active.bbake.sources = ''
+        ob_settings.sources = ''
         return
+        
     renderable = {'MESH', 'CURVE', 'FONT', 'META', 'SURFACE'}
     sources = [ob for ob in context.selected_objects
                if ob.type in renderable
                and not ob == active]
     source_names = [ob.name for ob in sources]
     if not source_names:
-        active.bbake.sources = ''
+        ob_settings.sources = ''
         return
 
     source_names = ', '.join(source_names)
 
-    active.bbake.sources = source_names
+    ob_settings.sources = source_names
 
 class BBake_Set_Sources(Operator):
     ''''''
