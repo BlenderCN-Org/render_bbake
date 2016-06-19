@@ -6,6 +6,7 @@ from .batch_bake_utils import *
 import os
 from time import time
 
+####################################################################
 class BBake_Setup_Copy_Settings(Operator):
     ''''''
     bl_idname = "object.bbake_copy_settings"
@@ -31,47 +32,8 @@ class BBake_Setup_Copy_Settings(Operator):
     def execute(self, context):
         bbake_copy_settings(self, context)
         return {'FINISHED'}
-#############################
 
-def set_combined_pass_settings(context, ob):
-    render = context.scene.render
-    bake_settings = render.bake
-    bake_settings.use_pass_ambient_occlusion = ob.bbake.combined_use_pass_ao
-    bake_settings.use_pass_diffuse = ob.bbake.combined_use_pass_diffuse
-    bake_settings.use_pass_direct = ob.bbake.combined_use_pass_direct
-    bake_settings.use_pass_emit = ob.bbake.combined_use_pass_emit
-    bake_settings.use_pass_glossy = ob.bbake.combined_use_pass_glossy
-    bake_settings.use_pass_indirect = ob.bbake.combined_use_pass_indirect
-    bake_settings.use_pass_subsurface = ob.bbake.combined_use_pass_subsurface
-    bake_settings.use_pass_transmission = ob.bbake.combined_use_pass_transmission
-
-def set_diffuse_pass_settings(context, ob):
-    render = context.scene.render
-    bake_settings = render.bake
-    bake_settings.use_pass_direct = ob.bbake.diffuse_use_pass_direct
-    bake_settings.use_pass_indirect = ob.bbake.diffuse_use_pass_indirect
-    bake_settings.use_pass_color = ob.bbake.diffuse_use_pass_color
-
-def set_glossy_pass_settings(context, ob):
-    render = context.scene.render
-    bake_settings = render.bake
-    bake_settings.use_pass_direct = ob.bbake.glossy_use_pass_direct
-    bake_settings.use_pass_indirect = ob.bbake.glossy_use_pass_indirect
-    bake_settings.use_pass_color = ob.bbake.glossy_use_pass_color
-
-def set_transmission_pass_settings(context, ob):
-    render = context.scene.render
-    bake_settings = render.bake
-    bake_settings.use_pass_direct = ob.bbake.transmission_use_pass_direct
-    bake_settings.use_pass_indirect = ob.bbake.transmission_use_pass_indirect
-    bake_settings.use_pass_color = ob.bbake.transmission_use_pass_color
-
-def set_subsurface_pass_settings(context, ob):
-    render = context.scene.render
-    bake_settings = render.bake
-    bake_settings.use_pass_direct = ob.bbake.subsurface_use_pass_direct
-    bake_settings.use_pass_indirect = ob.bbake.subsurface_use_pass_indirect
-    bake_settings.use_pass_color = ob.bbake.subsurface_use_pass_color
+####################################################################
 
 def set_pass_settings(context, aov):
     render = context.scene.render
@@ -95,19 +57,18 @@ def set_pass_settings(context, aov):
 
 
 
-def bake_aov(context, ob, bake_type, aov):
+def bake_aov(context, ob, aov):
     STARTAOV = time()
     render = context.scene.render
     bake_settings = render.bake
     filename = '%s_%s' %(ob.name, aov.name)
-    #node, image = node_and_image(context, ob, filename, aov)
     image = setup_materials(context, ob, filename, aov)
     filepath = os.path.join(ob.bbake.ob_settings.path, image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
 
-    msg('\n%s\nBaking "%s"  - - >  %s' %('_'*40, ob.name, bake_type))
+    msg('\n%s\nBaking "%s"  - - >  %s' %('_'*40, ob.name, aov.name))
     context.scene.update()
-    bpy.ops.object.bake(type=bake_type,
+    bpy.ops.object.bake(type=aov.name.upper(),
                         filepath=filepath,
                         save_mode='INTERNAL',
                         width=image.generated_width,
@@ -128,7 +89,7 @@ def bake_aov(context, ob, bake_type, aov):
 
     image.save_render(filepath)
     ENDAOV = time() - STARTAOV
-    msg('AOV: %s    Time: %s Seconds\n- - > %s' %(bake_type.ljust(13), str(round(ENDAOV, 2)), filepath))
+    msg('AOV: %s    Time: %s Seconds\n- - > %s' %(aov.name.ljust(13), str(round(ENDAOV, 2)), filepath))
     update_image(image, filepath)
     ### AOV FINISHED
 
@@ -238,52 +199,47 @@ def bbake_bake_selected(self, context):
 
         if bbake.aov_combined.use:
             set_pass_settings(context, bbake.aov_combined)
-            #set_combined_pass_settings(context, ob)
-            bake_aov(context, ob, 'COMBINED', bbake.aov_combined)
+            bake_aov(context, ob, bbake.aov_combined)
 
         if bbake.aov_diffuse.use:
             set_pass_settings(context, bbake.aov_diffuse)
-            #set_diffuse_pass_settings(context, ob)
-            bake_aov(context, ob, 'DIFFUSE', bbake.aov_diffuse)
+            bake_aov(context, ob, bbake.aov_diffuse)
 
         if bbake.aov_glossy.use:
             set_pass_settings(context, bbake.aov_glossy)
-            #set_glossy_pass_settings(context, ob)
-            bake_aov(context, ob, 'GLOSSY', bbake.aov_glossy)
+            bake_aov(context, ob, bbake.aov_glossy)
 
         if bbake.aov_transmission.use:
             set_pass_settings(context, bbake.aov_transmission)
-            #set_transmission_pass_settings(context, ob)
-            bake_aov(context, ob, 'TRANSMISSION', bbake.aov_transmission)
+            bake_aov(context, ob, bbake.aov_transmission)
 
         if bbake.aov_subsurface.use:
             set_pass_settings(context, bbake.aov_subsurface)
-            #set_subsurface_pass_settings(context, ob)
-            bake_aov(context, ob, 'SUBSURFACE', bbake.aov_subsurface)
+            bake_aov(context, ob, bbake.aov_subsurface)
 
         if bbake.aov_normal.use:
             set_pass_settings(context, bbake.aov_normal)
-            bake_aov(context, ob, 'NORMAL', bbake.aov_normal)
+            bake_aov(context, ob, bbake.aov_normal)
 
         if bbake.aov_ao.use:
             set_pass_settings(context, bbake.aov_ao)
-            bake_aov(context, ob, 'AO', bbake.aov_ao)
+            bake_aov(context, ob, bbake.aov_ao)
 
         if bbake.aov_shadow.use:
             set_pass_settings(context, bbake.aov_shadow)
-            bake_aov(context, ob, 'SHADOW', bbake.aov_shadow)
+            bake_aov(context, ob, bbake.aov_shadow)
 
         if bbake.aov_emit.use:
             set_pass_settings(context, bbake.aov_emit)
-            bake_aov(context, ob, 'EMIT', bbake.aov_emit)
+            bake_aov(context, ob, bbake.aov_emit)
 
         if bbake.aov_uv.use:
             set_pass_settings(context, bbake.aov_uv)
-            bake_aov(context, ob, 'UV', bbake.aov_uv)
+            bake_aov(context, ob, bbake.aov_uv)
 
         if bbake.aov_environment.use:
             set_pass_settings(context, bbake.aov_environment)
-            bake_aov(context, ob, 'ENVIRONMENT', bbake.aov_environment)
+            bake_aov(context, ob, bbake.aov_environment)
 
         ### CLEANUP
         #IF SELECTED TO ACTIVE

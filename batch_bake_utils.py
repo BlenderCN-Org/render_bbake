@@ -73,63 +73,7 @@ def getsize(context, aov):
         sizex = sizey = int(aov.dimensions)
         return sizex, sizey
         return aov.dimensions_custom.x, aov.dimensions_custom.y
-    '''
-    if bake_type == 'COMBINED':
-        if not ob.bbake.combinedsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.combinedsize)
-            return sizex, sizey
-        return ob.bbake.combinedsize_custom.x, ob.bbake.combinedsize_custom.y
-    if bake_type == 'DIFFUSE':
-        if not ob.bbake.diffsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.diffsize)
-            return sizex, sizey
-        return ob.bbake.diffsize_custom.x, ob.bbake.diffsize_custom.y
-    if bake_type == 'GLOSSY':
-        if not ob.bbake.specsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.specsize)
-            return sizex, sizey
-        return ob.bbake.specsize_custom.x, ob.bbake.specsize_custom.y
-    if bake_type == 'TRANSMISSION':
-        if not ob.bbake.transmissionsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.transmissionsize)
-            return sizex, sizey
-        return ob.bbake.transmissionsize_custom.x, ob.bbake.transmissionsize_custom.y
-    if bake_type == 'SUBSURFACE':
-        if not ob.bbake.subsurfacesize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.subsurfacesize)
-            return sizex, sizey
-        return ob.bbake.subsurfacesize_custom.x, ob.bbake.subsurfacesize_custom.y
-    if bake_type == 'NORMAL':
-        if not ob.bbake.normalsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.normalsize)
-            return sizex, sizey
-        return ob.bbake.normalsize_custom.x, ob.bbake.normalsize_custom.y
-    if bake_type == 'AO':
-        if not ob.bbake.aosize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.aosize)
-            return sizex, sizey
-        return ob.bbake.aosize_custom.x, ob.bbake.aosize_custom.y
-    if bake_type == 'SHADOW':
-        if not ob.bbake.shadowsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.shadowsize)
-            return sizex, sizey
-        return ob.bbake.shadowsize_custom.x, ob.bbake.shadowsize_custom.y
-    if bake_type == 'EMIT':
-        if not ob.bbake.emitsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.emitsize)
-            return sizex, sizey
-        return ob.bbake.emitsize_custom.x, ob.bbake.emitsize_custom.y
-    if bake_type == 'UV':
-        if not ob.bbake.uvsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.uvsize)
-            return sizex, sizey
-        return ob.bbake.uvsize_custom.x, ob.bbake.uvsize_custom.y
-    if bake_type == 'ENVIRONMENT':
-        if not ob.bbake.envsize == 'CUSTOM':
-            sizex = sizey = int(ob.bbake.envsize)
-            return sizex, sizey
-        return ob.bbake.envsize_custom.x, ob.bbake.envsize_custom.y
-    '''
+
 def setup_image(context, filename, aov):
     sizex, sizey = getsize(context, aov)
     if filename in bpy.data.images:
@@ -176,36 +120,7 @@ def setup_materials(context, ob, filename, aov):
                 setup_bake_node(context, slot.material, image)
     return image
 
-def node_and_image(context, ob, filename, aov):
-    '''Return the node and image datablocks for baking with <bake_type>'''
-    # look if image already there
-    sizex, sizey = getsize(context, ob, bake_type, aov)
-    if filename in bpy.data.images:
-        img = bpy.data.images[filename]
-        if not img.source == 'GENERATED':
-            img.source = 'GENERATED'
-        img.generated_height = sizey
-        img.generated_width = sizex
-        image = img
-    else:
-        image = bpy.data.images.new('bakeimg', sizex, sizey)
 
-    image.update()
-    nodes = ob.active_material.node_tree.nodes
-    bake_node = next(iter([n for n in nodes
-                           if n.bl_idname == 'ShaderNodeTexImage'
-                           and n.image
-                           and n.image == image]),
-                           None)
-    if not bake_node:
-        bake_node = nodes.new('ShaderNodeTexImage')
-    bake_node.select = True
-    nodes.active = bake_node
-    bake_node.image = image
-    bake_node.label = filename
-    image.name = filename
-    context.scene.update()
-    return bake_node, image
 
 def update_image(image, filepath):
     image.source = 'FILE'
