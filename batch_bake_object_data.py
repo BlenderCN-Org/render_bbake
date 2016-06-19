@@ -56,7 +56,7 @@ class AOV():
     use_pass_transmission = BoolProperty(
         name='Transmission',
         default=True)
-    use_pass_ao = BoolProperty(
+    use_pass_ambient_occlusion = BoolProperty(
         name='AO',
         default=True)
     use_pass_emit = BoolProperty(

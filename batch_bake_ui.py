@@ -81,7 +81,7 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
 
             def draw_aov_header(layout, aov):
                 row = layout.row()
-                row.prop(aov, 'use', text=aov.name)
+                row.prop(aov, 'use', text=aov.name, toggle=1)
                 if aov.dimensions == 'CUSTOM':
                     row.prop(aov, 'dimensions_custom', text='')
                 row.prop(aov, 'dimensions', text='')
@@ -95,18 +95,24 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
 
             def draw_pass_types_combined(layout, aov):
                 if aov.use:
-                    row=layout.row()
-                    row.prop(aov, 'use_pass_ao')
-                    row.prop(aov, 'use_pass_emit')
-                    row=layout.row(align=True)
-                    row.prop(aov, 'use_pass_direct', toggle=True)
-                    row.prop(aov, 'use_pass_indirect', toggle=True)
-                    row=layout.row()
-                    row.prop(aov, 'use_pass_diffuse')
-                    row.prop(aov, 'use_pass_transmission')
-                    row=layout.row()
-                    row.prop(aov, 'use_pass_glossy')
-                    row.prop(aov, 'use_pass_subsurface')
+                    col = layout.column()
+                    row = col.row(align=True)
+                    row.prop(aov, "use_pass_direct", toggle=True)
+                    row.prop(aov, "use_pass_indirect", toggle=True)
+
+                    split = col.split()
+                    split.active = aov.use_pass_direct or aov.use_pass_indirect
+
+                    col = split.column()
+                    col.prop(aov, "use_pass_diffuse")
+                    col.prop(aov, "use_pass_glossy")
+                    col.prop(aov, "use_pass_transmission")
+
+                    col = split.column()
+                    col.prop(aov, "use_pass_subsurface")
+                    col.prop(aov, "use_pass_ambient_occlusion")
+                    col.prop(aov, "use_pass_emit")
+
 
             def draw_pass_types_normal(layout, aov):
                 if aov.use:
