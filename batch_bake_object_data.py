@@ -28,7 +28,7 @@ swizzle_items = [
     ('NEG_Z', '-Z', ''),
     ]
 
-class AOV(PropertyGroup):
+class AOV():
     #for all passes
     use = BoolProperty(name='use',
         default=False)
@@ -129,37 +129,37 @@ class BBake_Object_Settings(PropertyGroup):
         description='Name of object to use as cage for raycasting.',
         )
 
-class AOV_Diffuse(AOV):
+class AOV_Diffuse(PropertyGroup, AOV):
     pass
 
-class AOV_Glossy(AOV):
+class AOV_Glossy(PropertyGroup, AOV):
     pass
 
-class AOV_Transmission(AOV):
+class AOV_Transmission(PropertyGroup, AOV):
     pass
 
-class AOV_Subsurface(AOV):
+class AOV_Subsurface(PropertyGroup, AOV):
     pass
 
-class AOV_Normal(AOV):
+class AOV_Normal(PropertyGroup, AOV):
     pass
 
-class AOV_AO(AOV):
+class AOV_AO(PropertyGroup, AOV):
     pass
 
-class AOV_Combined(AOV):
+class AOV_Combined(PropertyGroup, AOV):
     pass
 
-class AOV_Shadow(AOV):
+class AOV_Shadow(PropertyGroup, AOV):
     pass
 
-class AOV_Emit(AOV):
+class AOV_Emit(PropertyGroup, AOV):
     pass
 
-class AOV_UV(AOV):
+class AOV_UV(PropertyGroup, AOV):
     pass
 
-class AOV_Environment(AOV):
+class AOV_Environment(PropertyGroup, AOV):
     pass
 
 ###########################################################################

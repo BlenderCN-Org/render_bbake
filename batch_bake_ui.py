@@ -75,133 +75,144 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
             row.operator('object.bbake_copy_settings', text='Copy Settings', icon='COPY_ID')
 
             #COMBINED
+            aov_combined = bbake.aov_combined
             box_combined = box.box()
             row = box_combined.row()
-            row.prop(ob.bbake, 'combined')
-            if ob.bbake.combinedsize == 'CUSTOM':
-                row.prop(ob.bbake, 'combinedsize_custom', text='')
-            row.prop(ob.bbake, 'combinedsize', text='')
-            if ob.bbake.combined:
+            row.prop(aov_combined, 'use')
+            if aov_combined.dimensions == 'CUSTOM':
+                row.prop(aov_combined, 'dimensions_custom', text='')
+            row.prop(aov_combined, 'dimensions', text='')
+            if aov_combined.use:
                 row=box_combined.row()
-                row.prop(ob.bbake, 'combined_use_pass_ao')
-                row.prop(ob.bbake, 'combined_use_pass_emit')
+                row.prop(aov_combined, 'use_pass_ao')
+                row.prop(aov_combined, 'use_pass_emit')
                 row=box_combined.row(align=True)
-                row.prop(ob.bbake, 'combined_use_pass_direct', toggle=True)
-                row.prop(ob.bbake, 'combined_use_pass_indirect', toggle=True)
+                row.prop(aov_combined, 'use_pass_direct', toggle=True)
+                row.prop(aov_combined, 'use_pass_indirect', toggle=True)
                 row=box_combined.row()
-                row.prop(ob.bbake, 'combined_use_pass_diffuse')
-                row.prop(ob.bbake, 'combined_use_pass_transmission')
+                row.prop(aov_combined, 'use_pass_diffuse')
+                row.prop(aov_combined, 'use_pass_transmission')
                 row=box_combined.row()
-                row.prop(ob.bbake, 'combined_use_pass_glossy')
-                row.prop(ob.bbake, 'combined_use_pass_subsurface')
+                row.prop(aov_combined, 'use_pass_glossy')
+                row.prop(aov_combined, 'use_pass_subsurface')
 
             #DIFFUSE
+            aov_diffuse = bbake.aov_diffuse
             box_diffuse = box.box()
             row = box_diffuse.row()
-            row.prop(ob.bbake, 'diffuse_pass')
-            if ob.bbake.diffsize == 'CUSTOM':
-                row.prop(ob.bbake, 'diffsize_custom', text='')
-            row.prop(ob.bbake, 'diffsize', text='')
-            if ob.bbake.diffuse_pass:
+            row.prop(aov_diffuse, 'use')
+            if aov_diffuse.dimensions == 'CUSTOM':
+                row.prop(aov_diffuse, 'dimensions_custom', text='')
+            row.prop(aov_diffuse, 'dimensions', text='')
+            if aov_diffuse.use:
                 row = box_diffuse.row(align=True)
-                row.prop(ob.bbake, 'diffuse_use_pass_direct', toggle=True)
-                row.prop(ob.bbake, 'diffuse_use_pass_indirect', toggle=True)
-                row.prop(ob.bbake, 'diffuse_use_pass_color', toggle=True)
+                row.prop(aov_diffuse, 'use_pass_direct', toggle=True)
+                row.prop(aov_diffuse, 'use_pass_indirect', toggle=True)
+                row.prop(aov_diffuse, 'use_pass_color', toggle=True)
 
             #GLOSSY
+            aov_glossy = bbake.aov_glossy
             box_glossy = box.box()
             row = box_glossy.row()
-            row.prop(ob.bbake, 'glossy_pass')
-            if ob.bbake.specsize == 'CUSTOM':
-                row.prop(ob.bbake, 'specsize_custom', text='')
-            row.prop(ob.bbake, 'specsize', text='')
-            if ob.bbake.glossy_pass:
+            row.prop(aov_glossy, 'use')
+            if aov_glossy.dimensions == 'CUSTOM':
+                row.prop(aov_glossy, 'dimensions_custom', text='')
+            row.prop(aov_glossy, 'dimensions', text='')
+            if aov_glossy.use:
                 row = box_glossy.row(align=True)
-                row.prop(ob.bbake, 'glossy_use_pass_direct', toggle=True)
-                row.prop(ob.bbake, 'glossy_use_pass_indirect', toggle=True)
-                row.prop(ob.bbake, 'glossy_use_pass_color', toggle=True)
+                row.prop(aov_glossy, 'use_pass_direct', toggle=True)
+                row.prop(aov_glossy, 'use_pass_indirect', toggle=True)
+                row.prop(aov_glossy, 'use_pass_color', toggle=True)
 
             #TRANSMISSION
+            aov_transmission = bbake.aov_transmission
             box_transmission = box.box()
             row = box_transmission.row()
-            row.prop(ob.bbake, 'transmission_pass')
-            if ob.bbake.transmissionsize == 'CUSTOM':
-                row.prop(ob.bbake, 'transmissionsize_custom', text='')
-            row.prop(ob.bbake, 'transmissionsize', text='')
-            if ob.bbake.transmission_pass:
+            row.prop(aov_transmission, 'use')
+            if aov_transmission.dimensions == 'CUSTOM':
+                row.prop(aov_transmission, 'dimensions_custom', text='')
+            row.prop(aov_transmission, 'dimensions', text='')
+            if aov_transmission.use:
                 row = box_transmission.row(align=True)
-                row.prop(ob.bbake, 'transmission_use_pass_direct', toggle=True)
-                row.prop(ob.bbake, 'transmission_use_pass_indirect', toggle=True)
-                row.prop(ob.bbake, 'transmission_use_pass_color', toggle=True)
+                row.prop(aov_transmission, 'use_pass_direct', toggle=True)
+                row.prop(aov_transmission, 'use_pass_indirect', toggle=True)
+                row.prop(aov_transmission, 'use_pass_color', toggle=True)
 
             #SUBSURFACE
+            aov_subsurface = bbake.aov_subsurface
             box_subsurface = box.box()
             row = box_subsurface.row()
-            row.prop(ob.bbake, 'subsurface_pass')
-            if ob.bbake.subsurfacesize == 'CUSTOM':
-                row.prop(ob.bbake, 'subsurfacesize_custom', text='')
-            row.prop(ob.bbake, 'subsurfacesize', text='')
-            if ob.bbake.subsurface_pass:
+            row.prop(aov_subsurface, 'use')
+            if aov_subsurface.dimensions == 'CUSTOM':
+                row.prop(aov_subsurface, 'dimensions_custom', text='')
+            row.prop(aov_subsurface, 'dimensions', text='')
+            if aov_subsurface.use:
                 row = box_subsurface.row(align=True)
-                row.prop(ob.bbake, 'subsurface_use_pass_direct', toggle=True)
-                row.prop(ob.bbake, 'subsurface_use_pass_indirect', toggle=True)
-                row.prop(ob.bbake, 'subsurface_use_pass_color', toggle=True)
+                row.prop(aov_subsurface, 'use_pass_direct', toggle=True)
+                row.prop(aov_subsurface, 'use_pass_indirect', toggle=True)
+                row.prop(aov_subsurface, 'use_pass_color', toggle=True)
 
             #NORMAL
+            aov_normal = bbake.aov_normal
             box_normal = box.box()
             row = box_normal.row()
-            row.prop(ob.bbake, 'normal')
-            if ob.bbake.normalsize == 'CUSTOM':
-                row.prop(ob.bbake, 'normalsize_custom', text='')
-            row.prop(ob.bbake, 'normalsize', text='')
-            if ob.bbake.normal:
+            row.prop(aov_normal, 'use')
+            if aov_normal.dimensions == 'CUSTOM':
+                row.prop(aov_normal, 'dimensions_custom', text='')
+            row.prop(aov_normal, 'dimensions', text='')
+            if aov_normal.use:
                 box_normal.label('Normal Settings:')
-                box_normal.prop(ob.bbake, "normal_space", text="Space")
+                box_normal.prop(aov_normal, "normal_space", text="Space")
                 row = box_normal.row(align=True)
                 row.label(text="Swizzle:")
-                row.prop(ob.bbake, "normal_r", text="")
-                row.prop(ob.bbake, "normal_g", text="")
-                row.prop(ob.bbake, "normal_b", text="")
+                row.prop(aov_normal, "normal_r", text="")
+                row.prop(aov_normal, "normal_g", text="")
+                row.prop(aov_normal, "normal_b", text="")
 
             #AO
+            aov_ao = bbake.aov_ao
             box_ao = box.box()
             row = box_ao.row()
-            row.prop(ob.bbake, 'ao')
-            if ob.bbake.aosize == 'CUSTOM':
-                row.prop(ob.bbake, 'aosize_custom', text='')
-            row.prop(ob.bbake, 'aosize', text='')
+            row.prop(aov_ao, 'use')
+            if aov_ao.dimensions == 'CUSTOM':
+                row.prop(aov_ao, 'dimensions_custom', text='')
+            row.prop(aov_ao, 'dimensions', text='')
 
             #SHADOW
+            aov_shadow = bbake.aov_shadow
             box_shadow = box.box()
             row = box_shadow.row()
-            row.prop(ob.bbake, 'shadow')
-            if ob.bbake.shadowsize == 'CUSTOM':
-                row.prop(ob.bbake, 'shadowsize_custom', text='')
-            row.prop(ob.bbake, 'shadowsize', text='')
+            row.prop(aov_shadow, 'use')
+            if aov_shadow.dimensions == 'CUSTOM':
+                row.prop(aov_shadow, 'dimensions_custom', text='')
+            row.prop(aov_shadow, 'dimensions', text='')
 
             #EMIT
+            aov_emit = bbake.aov_emit
             box_emit = box.box()
             row = box_emit.row()
-            row.prop(ob.bbake, 'emit')
-            if ob.bbake.emitsize == 'CUSTOM':
-                row.prop(ob.bbake, 'emitsize_custom', text='')
-            row.prop(ob.bbake, 'emitsize', text='')
+            row.prop(aov_emit, 'use')
+            if aov_emit.dimensions == 'CUSTOM':
+                row.prop(aov_emit, 'dimensions_custom', text='')
+            row.prop(aov_emit, 'dimensions', text='')
 
             #UV
+            aov_uv = bbake.aov_uv
             box_uv = box.box()
             row = box_uv.row()
-            row.prop(ob.bbake, 'uv')
-            if ob.bbake.uvsize == 'CUSTOM':
-                row.prop(ob.bbake, 'uvsize_custom', text='')
-            row.prop(ob.bbake, 'uvsize', text='')
+            row.prop(aov_uv, 'use')
+            if aov_uv.dimensions == 'CUSTOM':
+                row.prop(aov_uv, 'dimensions_custom', text='')
+            row.prop(aov_uv, 'dimensions', text='')
 
             #ENVIRONMENT
+            aov_environment = bbake.aov_environment
             box_env = box.box()
             row = box_env.row()
-            row.prop(ob.bbake, 'env')
-            if ob.bbake.envsize == 'CUSTOM':
-                row.prop(ob.bbake, 'envsize_custom', text='')
-            row.prop(ob.bbake, 'envsize', text='')
+            row.prop(aov_environment, 'use')
+            if aov_environment.dimensions == 'CUSTOM':
+                row.prop(aov_environment, 'dimensions_custom', text='')
+            row.prop(aov_environment, 'dimensions', text='')
 
 
 def register():
