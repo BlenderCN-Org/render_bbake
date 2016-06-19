@@ -54,10 +54,15 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
                 row = box.row()
                 row.prop(ob_settings, 'use_cage')
                 if ob_settings.use_cage:
-                    row.prop(ob_settings, 'cage_object', icon='OBJECT_DATAMODE')
+                    #row.prop(ob_settings, 'cage_object', icon='OBJECT_DATAMODE')
+                    row.prop_search(ob_settings, "cage_object", scene, "objects", text="")
 
                 row=box.row()
-                row.prop(ob_settings, 'cage_extrusion')
+                if ob_settings.use_cage:
+                    ray_name = 'Extrusion'
+                else:
+                    ray_name = 'Ray Distance'
+                row.prop(ob_settings, 'cage_extrusion', text=ray_name)
 
                 subbox = box.box()
                 row=subbox.row()
@@ -74,145 +79,106 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
             row.label('AOVs:')
             row.operator('object.bbake_copy_settings', text='Copy Settings', icon='COPY_ID')
 
+            def draw_aov_header(layout, aov):
+                row = layout.row()
+                row.prop(aov, 'use', text=aov.name)
+                if aov.dimensions == 'CUSTOM':
+                    row.prop(aov, 'dimensions_custom', text='')
+                row.prop(aov, 'dimensions', text='')
+
+            def draw_pass_types(layout, aov):
+                if aov.use:
+                    row = layout.row(align=True)
+                    row.prop(aov, 'use_pass_direct', toggle=True)
+                    row.prop(aov, 'use_pass_indirect', toggle=True)
+                    row.prop(aov, 'use_pass_color', toggle=True)
+
+            def draw_pass_types_combined(layout, aov):
+                if aov.use:
+                    row=layout.row()
+                    row.prop(aov, 'use_pass_ao')
+                    row.prop(aov, 'use_pass_emit')
+                    row=layout.row(align=True)
+                    row.prop(aov, 'use_pass_direct', toggle=True)
+                    row.prop(aov, 'use_pass_indirect', toggle=True)
+                    row=layout.row()
+                    row.prop(aov, 'use_pass_diffuse')
+                    row.prop(aov, 'use_pass_transmission')
+                    row=layout.row()
+                    row.prop(aov, 'use_pass_glossy')
+                    row.prop(aov, 'use_pass_subsurface')
+
+            def draw_pass_types_normal(layout, aov):
+                if aov.use:
+                    layout.label('Normal Settings:')
+                    layout.prop(aov, "normal_space", text="Space")
+                    row = layout.row(align=True)
+                    row.label(text="Swizzle:")
+                    row.prop(aov, "normal_r", text="")
+                    row.prop(aov, "normal_g", text="")
+                    row.prop(aov, "normal_b", text="")
+
             #COMBINED
-            aov_combined = bbake.aov_combined
-            box_combined = box.box()
-            row = box_combined.row()
-            row.prop(aov_combined, 'use')
-            if aov_combined.dimensions == 'CUSTOM':
-                row.prop(aov_combined, 'dimensions_custom', text='')
-            row.prop(aov_combined, 'dimensions', text='')
-            if aov_combined.use:
-                row=box_combined.row()
-                row.prop(aov_combined, 'use_pass_ao')
-                row.prop(aov_combined, 'use_pass_emit')
-                row=box_combined.row(align=True)
-                row.prop(aov_combined, 'use_pass_direct', toggle=True)
-                row.prop(aov_combined, 'use_pass_indirect', toggle=True)
-                row=box_combined.row()
-                row.prop(aov_combined, 'use_pass_diffuse')
-                row.prop(aov_combined, 'use_pass_transmission')
-                row=box_combined.row()
-                row.prop(aov_combined, 'use_pass_glossy')
-                row.prop(aov_combined, 'use_pass_subsurface')
+            aov = bbake.aov_combined
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
+            draw_pass_types_combined(box_aov, aov)
 
             #DIFFUSE
-            aov_diffuse = bbake.aov_diffuse
-            box_diffuse = box.box()
-            row = box_diffuse.row()
-            row.prop(aov_diffuse, 'use')
-            if aov_diffuse.dimensions == 'CUSTOM':
-                row.prop(aov_diffuse, 'dimensions_custom', text='')
-            row.prop(aov_diffuse, 'dimensions', text='')
-            if aov_diffuse.use:
-                row = box_diffuse.row(align=True)
-                row.prop(aov_diffuse, 'use_pass_direct', toggle=True)
-                row.prop(aov_diffuse, 'use_pass_indirect', toggle=True)
-                row.prop(aov_diffuse, 'use_pass_color', toggle=True)
+            aov = bbake.aov_diffuse
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
+            draw_pass_types(box_aov, aov)
 
             #GLOSSY
-            aov_glossy = bbake.aov_glossy
-            box_glossy = box.box()
-            row = box_glossy.row()
-            row.prop(aov_glossy, 'use')
-            if aov_glossy.dimensions == 'CUSTOM':
-                row.prop(aov_glossy, 'dimensions_custom', text='')
-            row.prop(aov_glossy, 'dimensions', text='')
-            if aov_glossy.use:
-                row = box_glossy.row(align=True)
-                row.prop(aov_glossy, 'use_pass_direct', toggle=True)
-                row.prop(aov_glossy, 'use_pass_indirect', toggle=True)
-                row.prop(aov_glossy, 'use_pass_color', toggle=True)
+            aov = bbake.aov_glossy
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
+            draw_pass_types(box_aov, aov)
+
 
             #TRANSMISSION
-            aov_transmission = bbake.aov_transmission
-            box_transmission = box.box()
-            row = box_transmission.row()
-            row.prop(aov_transmission, 'use')
-            if aov_transmission.dimensions == 'CUSTOM':
-                row.prop(aov_transmission, 'dimensions_custom', text='')
-            row.prop(aov_transmission, 'dimensions', text='')
-            if aov_transmission.use:
-                row = box_transmission.row(align=True)
-                row.prop(aov_transmission, 'use_pass_direct', toggle=True)
-                row.prop(aov_transmission, 'use_pass_indirect', toggle=True)
-                row.prop(aov_transmission, 'use_pass_color', toggle=True)
+            aov = bbake.aov_transmission
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
+            draw_pass_types(box_aov, aov)
 
             #SUBSURFACE
-            aov_subsurface = bbake.aov_subsurface
-            box_subsurface = box.box()
-            row = box_subsurface.row()
-            row.prop(aov_subsurface, 'use')
-            if aov_subsurface.dimensions == 'CUSTOM':
-                row.prop(aov_subsurface, 'dimensions_custom', text='')
-            row.prop(aov_subsurface, 'dimensions', text='')
-            if aov_subsurface.use:
-                row = box_subsurface.row(align=True)
-                row.prop(aov_subsurface, 'use_pass_direct', toggle=True)
-                row.prop(aov_subsurface, 'use_pass_indirect', toggle=True)
-                row.prop(aov_subsurface, 'use_pass_color', toggle=True)
+            aov = bbake.aov_subsurface
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
+            draw_pass_types(box_aov, aov)
 
             #NORMAL
-            aov_normal = bbake.aov_normal
-            box_normal = box.box()
-            row = box_normal.row()
-            row.prop(aov_normal, 'use')
-            if aov_normal.dimensions == 'CUSTOM':
-                row.prop(aov_normal, 'dimensions_custom', text='')
-            row.prop(aov_normal, 'dimensions', text='')
-            if aov_normal.use:
-                box_normal.label('Normal Settings:')
-                box_normal.prop(aov_normal, "normal_space", text="Space")
-                row = box_normal.row(align=True)
-                row.label(text="Swizzle:")
-                row.prop(aov_normal, "normal_r", text="")
-                row.prop(aov_normal, "normal_g", text="")
-                row.prop(aov_normal, "normal_b", text="")
+            aov = bbake.aov_normal
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
+            draw_pass_types_normal(box_aov, aov)
 
             #AO
-            aov_ao = bbake.aov_ao
-            box_ao = box.box()
-            row = box_ao.row()
-            row.prop(aov_ao, 'use')
-            if aov_ao.dimensions == 'CUSTOM':
-                row.prop(aov_ao, 'dimensions_custom', text='')
-            row.prop(aov_ao, 'dimensions', text='')
+            aov = bbake.aov_ao
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
 
             #SHADOW
-            aov_shadow = bbake.aov_shadow
-            box_shadow = box.box()
-            row = box_shadow.row()
-            row.prop(aov_shadow, 'use')
-            if aov_shadow.dimensions == 'CUSTOM':
-                row.prop(aov_shadow, 'dimensions_custom', text='')
-            row.prop(aov_shadow, 'dimensions', text='')
+            aov = bbake.aov_shadow
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
 
             #EMIT
-            aov_emit = bbake.aov_emit
-            box_emit = box.box()
-            row = box_emit.row()
-            row.prop(aov_emit, 'use')
-            if aov_emit.dimensions == 'CUSTOM':
-                row.prop(aov_emit, 'dimensions_custom', text='')
-            row.prop(aov_emit, 'dimensions', text='')
+            aov = bbake.aov_emit
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
 
             #UV
-            aov_uv = bbake.aov_uv
-            box_uv = box.box()
-            row = box_uv.row()
-            row.prop(aov_uv, 'use')
-            if aov_uv.dimensions == 'CUSTOM':
-                row.prop(aov_uv, 'dimensions_custom', text='')
-            row.prop(aov_uv, 'dimensions', text='')
+            aov = bbake.aov_uv
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
 
             #ENVIRONMENT
-            aov_environment = bbake.aov_environment
-            box_env = box.box()
-            row = box_env.row()
-            row.prop(aov_environment, 'use')
-            if aov_environment.dimensions == 'CUSTOM':
-                row.prop(aov_environment, 'dimensions_custom', text='')
-            row.prop(aov_environment, 'dimensions', text='')
+            aov = bbake.aov_environment
+            box_aov = box.box()
+            draw_aov_header(box_aov, aov)
 
 
 def register():

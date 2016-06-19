@@ -130,37 +130,48 @@ class BBake_Object_Settings(PropertyGroup):
         )
 
 class AOV_Diffuse(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Diffuse')
+    type = StringProperty(name='type', default='DIFFUSE')
 
 class AOV_Glossy(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Glossy')
+    type = StringProperty(name='type', default='GLOSSY')
 
 class AOV_Transmission(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Transmission')
+    type = StringProperty(name='type', default='TRANSMISSION')
 
 class AOV_Subsurface(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Subsurface')
+    type = StringProperty(name='type', default='SUBSURFACE')
 
 class AOV_Normal(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Normal')
+    type = StringProperty(name='type', default='NORMAL')
 
 class AOV_AO(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='AO')
+    type = StringProperty(name='type', default='AO')
 
 class AOV_Combined(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Combined')
+    type = StringProperty(name='type', default='COMBINED')
 
 class AOV_Shadow(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Shadow')
+    type = StringProperty(name='type', default='SHADOW')
 
 class AOV_Emit(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Emit')
+    type = StringProperty(name='type', default='EMIT')
 
 class AOV_UV(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='UV')
+    type = StringProperty(name='type', default='UV')
 
 class AOV_Environment(PropertyGroup, AOV):
-    pass
+    name = StringProperty(name='name', default='Environment')
+    type = StringProperty(name='type', default='ENVIRONMENT')
 
 ###########################################################################
 class BBake_Object_Data(PropertyGroup):
