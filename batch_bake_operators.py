@@ -73,13 +73,35 @@ def set_subsurface_pass_settings(context, ob):
     bake_settings.use_pass_indirect = ob.bbake.subsurface_use_pass_indirect
     bake_settings.use_pass_color = ob.bbake.subsurface_use_pass_color
 
-def bake_aov(context, ob, bake_type):
+def set_pass_settings(context, aov):
+    render = context.scene.render
+    bake_settings = render.bake
+
+    bake_settings.use_pass_direct = aov.use_pass_direct
+    bake_settings.use_pass_indirect = aov.use_pass_indirect
+    bake_settings.use_pass_color = aov.use_pass_color
+
+    bake_settings.use_pass_ambient_occlusion = aov.use_pass_ambient_occlusion
+    bake_settings.use_pass_diffuse = aov.use_pass_diffuse
+    bake_settings.use_pass_emit = aov.use_pass_emit
+    bake_settings.use_pass_glossy = aov.use_pass_glossy
+    bake_settings.use_pass_subsurface = aov.use_pass_subsurface
+    bake_settings.use_pass_transmission = aov.use_pass_transmission
+
+    bake_settings.normal_space = aov.normal_space
+    bake_settings.normal_r = aov.normal_r
+    bake_settings.normal_g = aov.normal_g
+    bake_settings.normal_b = aov.normal_b
+
+
+
+def bake_aov(context, ob, bake_type, aov):
     STARTAOV = time()
     render = context.scene.render
     bake_settings = render.bake
-    filename = '%s_%s' %(ob.name, bake_type)
-    node, image = node_and_image(context, ob, filename, bake_type)
-    filepath = os.path.join(ob.bbake.path, image.name + render.file_extension)
+    filename = '%s_%s' %(ob.name, aov.name)
+    node, image = node_and_image(context, ob, filename, aov)
+    filepath = os.path.join(ob.bbake.ob_settings.path, image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
 
     msg('\n%s\nBaking "%s"  - - >  %s' %('_'*40, ob.name, bake_type))
@@ -110,13 +132,16 @@ def bake_aov(context, ob, bake_type):
     ### AOV FINISHED
 
 def testob(ob):
+    bbake = ob.bbake
+    ob_settings = bbake.ob_settings
+
     bakeable = True
     if not ob.type == 'MESH':
         return False
-    if not ob.bbake.use:
+    if not ob_settings.use:
         return False
 
-    path = bpy.path.abspath(ob.bbake.path)
+    path = bpy.path.abspath(ob_settings.path)
     if not os.path.isdir(path):
         try:
             os.makedirs(path)
@@ -153,6 +178,8 @@ def bbake_bake_selected(self, context):
     STARTALL = time()
     for ob in objects_to_bake:
         STARTOB = time()
+        bbake = ob.bbake
+        ob_settings = bbake.ob_settings
 
         #Set scene bake settings to this obs bbake settings
         set_scene_settings(context, ob.bbake)
@@ -167,10 +194,10 @@ def bbake_bake_selected(self, context):
 
 
         #IF SELECTED TO ACTIVE
-        if ob.bbake.use_selected_to_active:
+        if ob_settings.use_selected_to_active:
 
             #Names of Source objects for selected to active baking
-            source_names = [s.strip() for s in ob.bbake.sources.split(',')]
+            source_names = [s.strip() for s in ob_settings.sources.split(',')]
 
             found_sources = []
             for obinscene in context.scene.objects:
@@ -186,7 +213,7 @@ def bbake_bake_selected(self, context):
                     continue
 
             #store single source if available
-            if ob.bbake.align:
+            if ob_settings.align:
                 if len(source_names) == 1:
                     source_ob = next(iter([ob_sel for ob_sel in context.selected_objects
                                            if not ob_sel == ob]), None)
@@ -194,7 +221,7 @@ def bbake_bake_selected(self, context):
                     source_ob = None
 
             ## Align origins
-            if ob.bbake.align and source_ob:
+            if ob_settings.align and source_ob:
                 source_start = source_ob.location.copy()
                 source_ob.location = ob.location
 
@@ -208,56 +235,67 @@ def bbake_bake_selected(self, context):
         context.scene.update()
 
 
-        if ob.bbake.combined:
-            set_combined_pass_settings(context, ob)
+        if bbake.aov_combined.use:
+            set_pass_settings(context, bbake.aov_combined)
+            #set_combined_pass_settings(context, ob)
             bake_aov(context, ob, 'COMBINED')
 
-        if ob.bbake.diffuse_pass:
-            set_diffuse_pass_settings(context, ob)
-            bake_aov(context, ob, 'DIFFUSE')
+        if bbake.aov_diffuse.use:
+            set_pass_settings(context, bbake.aov_diffuse)
+            #set_diffuse_pass_settings(context, ob)
+            bake_aov(context, ob, 'DIFFUSE', bbake.aov_diffuse)
 
-        if ob.bbake.glossy_pass:
-            set_glossy_pass_settings(context, ob)
+        if bbake.aov_glossy.use:
+            set_pass_settings(context, bbake.aov_glossy)
+            #set_glossy_pass_settings(context, ob)
             bake_aov(context, ob, 'GLOSSY')
 
-        if ob.bbake.transmission_pass:
-            set_transmission_pass_settings(context, ob)
+        if bbake.aov_transmission.use:
+            set_pass_settings(context, bbake.aov_transmission)
+            #set_transmission_pass_settings(context, ob)
             bake_aov(context, ob, 'TRANSMISSION')
 
-        if ob.bbake.subsurface_pass:
-            set_subsurface_pass_settings(context, ob)
+        if bbake.aov_subsurface.use:
+            set_pass_settings(context, bbake.aov_subsurface)
+            #set_subsurface_pass_settings(context, ob)
             bake_aov(context, ob, 'SUBSURFACE')
 
-        if ob.bbake.normal:
+        if bbake.aov_normal.use:
+            set_pass_settings(context, bbake.aov_normal)
             bake_aov(context, ob, 'NORMAL')
 
-        if ob.bbake.ao:
+        if bbake.aov_ao.use:
+            set_pass_settings(context, bbake.aov_ao)
             bake_aov(context, ob, 'AO')
 
-        if ob.bbake.shadow:
+        if bbake.aov_shadow.use:
+            set_pass_settings(context, bbake.aov_shadow)
             bake_aov(context, ob, 'SHADOW')
 
-        if ob.bbake.emit:
+        if bbake.aov_emit.use:
+            set_pass_settings(context, bbake.aov_emit)
             bake_aov(context, ob, 'EMIT')
 
-        if ob.bbake.uv:
+        if bbake.aov_uv.use:
+            set_pass_settings(context, bbake.aov_uv)
             bake_aov(context, ob, 'UV')
 
-        if ob.bbake.env:
+        if bbake.aov_environment.use:
+            set_pass_settings(context, bbake.aov_environment)
             bake_aov(context, ob, 'ENVIRONMENT')
 
         ### CLEANUP
         #IF SELECTED TO ACTIVE
-        if ob.bbake.use_selected_to_active:
+        if ob_settings.use_selected_to_active:
             #reset aligned objects
-            if ob.bbake.align and source_ob:
+            if ob_settings.align and source_ob:
                 source_ob.location = source_start
                 if bake_settings.cage_object:
                     cage_ob.location = cage_start
 
         OBTIME = time() - STARTOB
         msg('\n%s\nOBJECT: %s Time: %s Seconds' %('_'*40, ob.name.ljust(13), str(round(OBTIME, 2))))
-        ob.bbake.use = False
+        #ob.bbake.use = False
         #### OB FINISHED
 
     ENDALL = time() - STARTALL
@@ -298,7 +336,7 @@ def bbake_set_sources(self, context):
     if self.clear:
         ob_settings.sources = ''
         return
-        
+
     renderable = {'MESH', 'CURVE', 'FONT', 'META', 'SURFACE'}
     sources = [ob for ob in context.selected_objects
                if ob.type in renderable
@@ -317,6 +355,7 @@ class BBake_Set_Sources(Operator):
     bl_idname = "object.set_bbake_sources"
     bl_label = "BBake Set Sources"
     bl_options = {'REGISTER', 'UNDO'}
+
     bl_description = "Set sources for baking selected (sources) to active (this active object)."
 
     clear = BoolProperty(

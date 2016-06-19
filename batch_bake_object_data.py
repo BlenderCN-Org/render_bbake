@@ -128,6 +128,14 @@ class BBake_Object_Settings(PropertyGroup):
         default='',
         description='Name of object to use as cage for raycasting.',
         )
+    margin = IntProperty(
+        name='Margin',
+        default=16,
+        description='Extends the baked result as a post process filter')
+    use_clear = BoolProperty(
+        name='Clear',
+        default=True,
+        description='Clear Images Before baking')
 
 class AOV_Diffuse(PropertyGroup, AOV):
     name = StringProperty(name='name', default='Diffuse')

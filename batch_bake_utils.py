@@ -52,20 +52,28 @@ def bbake_copy_settings(self, context):
 
 def set_scene_settings(context, bbake):
     '''Set scene bake settings to the bake settings of the object'''
+    ob_settings = bbake.ob_settings
     bake_settings = context.scene.render.bake
-    bake_settings.use_selected_to_active = bbake.use_selected_to_active
-    bake_settings.cage_extrusion = bbake.cage_extrusion
-    bake_settings.normal_space = bbake.normal_space
-    bake_settings.normal_r = bbake.normal_r
-    bake_settings.normal_g = bbake.normal_g
-    bake_settings.normal_b = bbake.normal_b
-    bake_settings.cage_extrusion = bbake.cage_extrusion
-    bake_settings.use_cage = bbake.use_cage
-    bake_settings.cage_object = bbake.cage_object
+    bake_settings.use_selected_to_active = ob_settings.use_selected_to_active
+    bake_settings.cage_extrusion = ob_settings.cage_extrusion
+    bake_settings.normal_space = bbake.aov_normal.normal_space
+    bake_settings.normal_r = bbake.aov_normal.normal_r
+    bake_settings.normal_g = bbake.aov_normal.normal_g
+    bake_settings.normal_b = bbake.aov_normal.normal_b
+    bake_settings.cage_extrusion = ob_settings.cage_extrusion
+    bake_settings.use_cage = ob_settings.use_cage
+    bake_settings.cage_object = ob_settings.cage_object
+    bake_settings.margin = ob_settings.margin
+    bake_settings.use_clear = ob_settings.use_clear
     context.scene.update()
 
-def getsize(context, ob, bake_type):
+def getsize(context, ob, aov):
     '''Return image size of <bake_type> pass for this object'''
+    if not aov.dimensions == 'CUSTOM':
+        sizex = sizey = int(aov.dimensions)
+        return sizex, sizey
+        return aov.dimensions_custom.x, aov.dimensions_custom.y
+    '''
     if bake_type == 'COMBINED':
         if not ob.bbake.combinedsize == 'CUSTOM':
             sizex = sizey = int(ob.bbake.combinedsize)
@@ -121,13 +129,13 @@ def getsize(context, ob, bake_type):
             sizex = sizey = int(ob.bbake.envsize)
             return sizex, sizey
         return ob.bbake.envsize_custom.x, ob.bbake.envsize_custom.y
+    '''
 
 
-
-def node_and_image(context, ob, filename, bake_type):
+def node_and_image(context, ob, filename, aov):
     '''Return the node and image datablocks for baking with <bake_type>'''
     # look if image already there
-    sizex, sizey = getsize(context, ob, bake_type)
+    sizex, sizey = getsize(context, ob, bake_type, aov)
     if filename in bpy.data.images:
         img = bpy.data.images[filename]
         if not img.source == 'GENERATED':
