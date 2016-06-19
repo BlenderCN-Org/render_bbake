@@ -67,7 +67,7 @@ def set_scene_settings(context, bbake):
     bake_settings.use_clear = ob_settings.use_clear
     context.scene.update()
 
-def getsize(context, ob, aov):
+def getsize(context, aov):
     '''Return image size of <bake_type> pass for this object'''
     if not aov.dimensions == 'CUSTOM':
         sizex = sizey = int(aov.dimensions)
@@ -130,7 +130,51 @@ def getsize(context, ob, aov):
             return sizex, sizey
         return ob.bbake.envsize_custom.x, ob.bbake.envsize_custom.y
     '''
+def setup_image(context, filename, aov):
+    sizex, sizey = getsize(context, aov)
+    if filename in bpy.data.images:
+        img = bpy.data.images[filename]
+        if not img.source == 'GENERATED':
+            img.source = 'GENERATED'
+        img.generated_height = sizey
+        img.generated_width = sizex
+        image = img
+    else:
+        image = bpy.data.images.new('bakeimg', sizex, sizey)
 
+    image.name = filename
+    image.update()
+    return image
+
+def setup_bake_node(context, material, image):
+    if not material.use_nodes:
+        material.use_nodes = True
+
+    nodes = material.node_tree.nodes
+    bake_node = next(iter([n for n in nodes
+                           if n.bl_idname == 'ShaderNodeTexImage'
+                           and n.image
+                           and n.image == image]),
+                           None)
+    if not bake_node:
+        bake_node = nodes.new('ShaderNodeTexImage')
+    bake_node.select = True
+    nodes.active = bake_node
+    bake_node.image = image
+    bake_node.label = image.name
+    
+    context.scene.update()
+
+    return bake_node
+
+def setup_materials(context, ob, filename, aov):
+
+    image = setup_image(context, filename, aov)
+    for slot in ob.material_slots:
+        if slot:
+            if slot.material:
+                setup_bake_node(context, slot.material, image)
+    return image
 
 def node_and_image(context, ob, filename, aov):
     '''Return the node and image datablocks for baking with <bake_type>'''
