@@ -71,16 +71,16 @@ def set_scene_settings(context, bbake):
     bake_settings.use_clear = ob_settings.use_clear
     context.scene.update()
 
-def getsize(context, aov):
-    '''Return image size of <bake_type> pass for this object'''
+def getsize(aov):
+    '''Return image size of pass for this object'''
     if not aov.dimensions == 'CUSTOM':
         sizex = sizey = int(aov.dimensions)
         return sizex, sizey
         return aov.dimensions_custom.x, aov.dimensions_custom.y
 
 
-def setup_image(context, filename, aov):
-    sizex, sizey = getsize(context, aov)
+def setup_image(filename, aov):
+    sizex, sizey = getsize(aov)
     if filename in bpy.data.images:
         img = bpy.data.images[filename]
         if not img.source == 'GENERATED':
@@ -95,7 +95,7 @@ def setup_image(context, filename, aov):
     image.update()
     return image
 
-def setup_bake_node(context, material, image):
+def setup_bake_node(material, image):
     if not material.use_nodes:
         material.use_nodes = True
 
@@ -112,17 +112,17 @@ def setup_bake_node(context, material, image):
     bake_node.image = image
     bake_node.label = image.name
     
-    context.scene.update()
+    bpy.context.scene.update()
 
     return bake_node
 
-def setup_materials(context, ob, filename, aov):
+def setup_materials(ob, filename, aov):
 
-    image = setup_image(context, filename, aov)
+    image = setup_image(filename, aov)
     for slot in ob.material_slots:
         if slot:
             if slot.material:
-                setup_bake_node(context, slot.material, image)
+                setup_bake_node(slot.material, image)
     return image
 
 

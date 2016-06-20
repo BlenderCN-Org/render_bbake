@@ -62,7 +62,7 @@ def bake_aov(context, ob, aov):
     render = context.scene.render
     bake_settings = render.bake
     filename = '%s_%s' %(ob.name, aov.name)
-    image = setup_materials(context, ob, filename, aov)
+    image = setup_materials(ob, filename, aov)
     filepath = os.path.join(ob.bbake.ob_settings.path, image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
 
@@ -94,6 +94,7 @@ def bake_aov(context, ob, aov):
     ### AOV FINISHED
 
 def testob(ob):
+    '''Make sure this object is bakeable'''
     bbake = ob.bbake
     ob_settings = bbake.ob_settings
 
