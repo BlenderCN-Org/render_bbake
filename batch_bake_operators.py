@@ -70,6 +70,7 @@ def bake_aov(context, ob, aov):
                                 os.path.join(ob.bbake.ob_settings.path, ob.name),
                                 image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
+    #image.save_render(filepath)#not needed here
 
     msg('\n%s\nBaking "%s"  - - >  %s' %('_'*40, ob.name, aov.name))
     context.scene.update()
