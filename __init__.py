@@ -1,13 +1,14 @@
 bl_info = {
-    "name": "Object Batch Baker",
+    "name": "Cycles Batch Baker",
     "author": "Florian Felix Meyer (tstscr)",
-    "version": (0, 3, 0),
-    "blender": (2, 74, 5),
-    "location": "Properties >> Render >> Batch Baker",
-    "description": "Batch Baking",
+    "version": (1, 0, 0),
+    "blender": (2, 77, 0),
+    "location": "Properties >> Render >> BBake",
+    "description": "Batch Baking for Cycles",
     "warning": "",
-    "wiki_url": "",
-    "category": "User",
+    "wiki_url": "https://github.com/florianfelix/render_bbake",
+    "tracker_url": "https://github.com/florianfelix/render_bbake/issues",
+    "category": "Render",
 }
 
 if "bpy" in locals():
