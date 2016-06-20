@@ -11,7 +11,7 @@ class BBake_Setup_Copy_Settings(Operator):
     ''''''
     bl_idname = "object.bbake_copy_settings"
     bl_label = "BBake Copy Settings to Selected"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER'}
     bl_description = "Copy BBake Settings from this object to selected"
 
     copy_aov = BoolProperty(

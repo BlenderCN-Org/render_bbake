@@ -26,28 +26,32 @@ def bbake_copy_settings(self, context):
     source = context.active_object
     targets = [ob for ob in context.selected_objects if ob.type == 'MESH' and not ob ==source]
 
-    non_aov_keys = [
-        'path',
-        'use',
-        'use_selected_to_active',
-        'cage_object',
-        'use_cage',
-        'cage_extrusion',
-        'align',
-        'sources',
-        ]
+    aovs = [
+            'aov_combined',
+            'aov_diffuse',
+            'aov_glossy',
+            'aov_transmission',
+            'aov_subsurface',
+            'aov_normal',
+            'aov_ao',
+            'aov_shadow',
+            'aov_emit',
+            'aov_uv',
+            'aov_environment',
+            ]
 
     bbs = source.bbake
     for target in targets:
         bbt = target.bbake
-        for k,v in bbs.items():
-            if self.copy_ob_settings and k in non_aov_keys:
-                #print('OB->',k.upper().ljust(26),v)
-                bbt[k] = v
 
-            if self.copy_aov and k not in non_aov_keys:
-                #print('AOV->',k.upper().ljust(26),v)
-                bbt[k] = v
+        if self.copy_aov:
+            for aov in aovs:
+                for k,v in getattr(bbs, aov).items():
+                    getattr(bbt, aov)[k] = v
+
+        if self.copy_ob_settings:
+            for k,v in getattr(bbs, 'ob_settings').items():
+                getattr(bbt, 'ob_settings')[k] = v
 
 
 def set_scene_settings(context, bbake):
@@ -73,6 +77,7 @@ def getsize(context, aov):
         sizex = sizey = int(aov.dimensions)
         return sizex, sizey
         return aov.dimensions_custom.x, aov.dimensions_custom.y
+
 
 def setup_image(context, filename, aov):
     sizex, sizey = getsize(context, aov)

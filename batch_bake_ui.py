@@ -77,7 +77,9 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
 
             row = box.row()
             row.label('AOVs:')
-            row.operator('object.bbake_copy_settings', text='Copy Settings', icon='COPY_ID')
+            row.operator('object.bbake_copy_settings',
+                        text='Copy AOVs to selected',
+                        icon='COPY_ID').copy_aov = True
 
             def draw_aov_header(layout, aov):
                 row = layout.row()
