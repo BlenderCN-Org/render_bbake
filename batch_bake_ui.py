@@ -29,19 +29,27 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
         ob = context.active_object
         bbake = ob.bbake
         ob_settings = bbake.ob_settings
+        scene_settings = scene.bbake
 
         col = layout.column()
 
-        row=col.row(align=True)
+        box_global = col.box()
+        row=box_global.row(align=True)
         row.operator('scene.bbake_bake_selected', icon='RENDER_STILL', text='Bake Selected Objects')
         row.operator('scene.bbake_bake_selected', icon='RENDER_STILL', text='Bake All Objects').all=True
+        row=box_global.row(align=True)
+        row.prop(scene_settings, 'turn_off')
+        row.prop(scene_settings, 'create_object_folders')
+
+
         col.separator()
         col.separator()
-        col.prop(ob_settings, 'use', text='Bake this object ("%s")' %ob.name, toggle=0)
+        box = col.box()
+        box.prop(ob_settings, 'use', text='Bake this object ("%s")' %ob.name, toggle=0)
 
         if ob_settings.use:
             ### SELECTED TO ACTIVE SETTINGS
-            box = col.box()
+            #box = col.box()
             box.prop(ob_settings, 'path')
             row = box.row()
             row.prop(ob_settings, 'use_selected_to_active')

@@ -187,6 +187,16 @@ class BBake_Object_Data(PropertyGroup):
     aov_uv = PointerProperty(type=AOV_UV)
     aov_environment = PointerProperty(type=AOV_Environment)
 
+class BBake_Scene_Data(PropertyGroup):
+    turn_off = BoolProperty(
+        name='turn off',
+        default=False,
+        description='Turn BBake off for objects finished baking')
+    create_object_folders = BoolProperty(
+        name='Create Object Folders',
+        default=False,
+        description='Create a subfolder per baked object in the bake folder')
+
 
 ###########################################################################
 def register():
@@ -205,11 +215,14 @@ def register():
     bpy.utils.register_class(AOV_Environment)
 
     bpy.utils.register_class(BBake_Object_Data)
+    bpy.utils.register_class(BBake_Scene_Data)
     bpy.types.Object.bbake = PointerProperty(type=BBake_Object_Data)
+    bpy.types.Scene.bbake = PointerProperty(type=BBake_Scene_Data)
 
 def unregister():
     #print('\nUN-REGISTER:\n', __name__)
     bpy.utils.unregister_class(BBake_Object_Data)
+    bpy.utils.unregister_class(BBake_Scene_Data)
 
     bpy.utils.unregister_class(AOV_Diffuse)
     bpy.utils.unregister_class(AOV_Glossy)
@@ -223,6 +236,6 @@ def unregister():
     bpy.utils.unregister_class(AOV_UV)
     bpy.utils.unregister_class(AOV_Environment)
 
-    del bpy.types.Object.bbake
+    del(bpy.types.Object.bbake, bpy.types.Scene.bbake)
 
 

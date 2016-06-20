@@ -63,7 +63,12 @@ def bake_aov(context, ob, aov):
     bake_settings = render.bake
     filename = '%s_%s' %(ob.name, aov.name)
     image = setup_materials(ob, filename, aov)
+
     filepath = os.path.join(ob.bbake.ob_settings.path, image.name + render.file_extension)
+    if context.scene.bbake.create_object_folders:
+        filepath = os.path.join(
+                                os.path.join(ob.bbake.ob_settings.path, ob.name),
+                                image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
 
     msg('\n%s\nBaking "%s"  - - >  %s' %('_'*40, ob.name, aov.name))
@@ -253,7 +258,9 @@ def bbake_bake_selected(self, context):
 
         OBTIME = time() - STARTOB
         msg('\n%s\nOBJECT: %s Time: %s Seconds' %('_'*40, ob.name.ljust(13), str(round(OBTIME, 2))))
-        #ob.bbake.use = False
+        
+        if context.scene.bbake.turn_off:
+            ob.bbake.ob_settings.use = False
         #### OB FINISHED
 
     ENDALL = time() - STARTALL
