@@ -112,7 +112,7 @@ class BBake_Object_Settings(PropertyGroup):
         description='Align origins of source and cage object with bake object (Only if single source object).',
         )
     use_selected_to_active = BoolProperty(
-        name='Selcted to active',
+        name='Selected to active',
         default=False,
         )
     use_cage = BoolProperty(
