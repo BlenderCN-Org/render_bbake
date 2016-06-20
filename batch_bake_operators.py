@@ -72,7 +72,7 @@ def bake_aov(context, ob, aov):
     filepath = bpy.path.abspath(filepath)
     #image.save_render(filepath)#not needed here
 
-    msg('\n%s\nBaking "%s"  - - >  %s' %('_'*40, ob.name, aov.name))
+    msg('\nBaking "%s"  - - >  %s' %(ob.name, aov.name))
     context.scene.update()
     bpy.ops.object.bake(type=aov.name.upper(),
                         filepath=filepath,
@@ -168,7 +168,7 @@ def bbake_bake_selected(self, context):
         ob.select = True
         context.scene.objects.active = ob
 
-
+        msg('\n%s'%('_'*40))
         #IF SELECTED TO ACTIVE
         if ob_settings.use_selected_to_active:
 
