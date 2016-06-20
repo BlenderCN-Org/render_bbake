@@ -95,7 +95,7 @@ def bake_aov(context, ob, aov):
 
     image.save_render(filepath)
     ENDAOV = time() - STARTAOV
-    msg('AOV: %s    Time: %s Seconds\n- - > %s' %(aov.name.ljust(13), str(round(ENDAOV, 2)), filepath))
+    msg('AOV: %s    Time: %s Seconds\n%s' %(aov.name.ljust(13), str(round(ENDAOV, 2)), filepath))
     update_image(image, filepath)
     ### AOV FINISHED
 
