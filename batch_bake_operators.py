@@ -265,7 +265,7 @@ def bbake_bake_selected(self, context):
                     cage_ob.location = cage_start
 
         OBTIME = time() - STARTOB
-        msg('\n%s\nOBJECT: %s Time: %s Seconds' %('_'*40, ob.name.ljust(13), str(round(OBTIME, 2))))
+        msg('\nOBJECT: %s Time: %s Seconds' %(ob.name.ljust(13), str(round(OBTIME, 2))))
         
         if context.scene.bbake.turn_off:
             ob.bbake.ob_settings.use = False
