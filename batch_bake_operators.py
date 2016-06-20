@@ -121,11 +121,18 @@ def testob(ob):
         msg('"%s" has no UV-Layer. Skipping.' %(ob.name))
         bakeable = False
 
-    if not ob.active_material:
+    if len(ob.material_slots) == 0:
         bakeable = False
-        msg('"%s" has no bakeable material setup. Skipping.' %(ob.name))
-        if not ob.active_material.node_tree:
-            bakeable = False
+        msg('"%s" has no materials. Skipping.' %(ob.name))
+
+    else:
+        bakeable = True
+        for slot in ob.material_slots:
+            if slot.material:
+                bakeable = True
+            else:
+                bakeable = False
+                msg('"%s" has no materials. Skipping.' %(ob.name))
 
     if ob.hide_render:
         bakeable = False
