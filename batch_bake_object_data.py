@@ -8,7 +8,8 @@ import bpy
 from bpy.props import *
 from bpy.types import PropertyGroup
 
-size_items = [('265','265',''),
+size_items = [
+    ('265','265',''),
     ('512','512',''),
     ('1024','1024',''),
     ('2048','2048',''),
@@ -30,47 +31,62 @@ swizzle_items = [
 
 class AOV():
     #for all passes
-    use = BoolProperty(name='use',
-        default=False)
+    use = BoolProperty(
+        name='use',
+        default=False,
+        description='Bake this pass',
+        )
     dimensions = EnumProperty(
+        name='Dimensions',
         items=size_items,
+        description='Map Dimensions',
         )
     dimensions_custom = IntVectorProperty(
         name='Dimensions',
         size=2,
-        default=(265, 265)
+        default=(265, 265),
+        description='Custom Map Dimensions',
         )
 
     #for select passes
     use_pass_direct = BoolProperty(
         name='Direct',
-        default=True)
+        default=True,
+        description='Add direct light contribution')
     use_pass_indirect = BoolProperty(
         name='Indirect',
-        default=True)
+        default=True,
+        description='Add indirect light contribution')
     use_pass_color = BoolProperty(
         name='Color',
-        default=True)
+        default=True,
+        description='Color the pass')
 
     #for combined pass
     use_pass_transmission = BoolProperty(
         name='Transmission',
-        default=True)
+        default=True,
+        description='Add transmission contribution')
     use_pass_ambient_occlusion = BoolProperty(
         name='AO',
-        default=True)
+        default=True,
+        description='Add ambient occlusion contribution')
     use_pass_emit = BoolProperty(
         name='Emit',
-        default=True)
+        default=True,
+        description='Add emission contribution')
     use_pass_subsurface = BoolProperty(
         name='Subsurface',
-        default=True)
+        default=True,
+        description='Add subsurface contribution')
     use_pass_diffuse = BoolProperty(
         name='Diffuse',
-        default=True)
+        default=True,
+        description='Add diffuse contribution')
     use_pass_glossy = BoolProperty(
         name='Glossy',
-        default=True)
+        default=True,
+        description='Add glossy contribution')
 
     #for normal pass
     normal_space = EnumProperty(
@@ -94,13 +110,13 @@ class BBake_Object_Settings(PropertyGroup):
     use = BoolProperty(
         name='Bake this Object',
         default=False,
-        description='Do not ignore this Object when baking.',
+        description='Enable batch baking for this object',
         )
     path = StringProperty(
         name='Bake Folder',
         subtype='DIR_PATH',
         default='//textures/',
-        description='Save baked images in this Folder.',
+        description='Save baked images from this object in this folder',
         )
     sources = StringProperty(
         name='Source Objects',
@@ -131,6 +147,9 @@ class BBake_Object_Settings(PropertyGroup):
     margin = IntProperty(
         name='Margin',
         default=16,
+        subtype='PIXEL',
+        min=0, soft_min=0,
+        max=64, soft_max=64,
         description='Extends the baked result as a post process filter')
     use_clear = BoolProperty(
         name='Clear',

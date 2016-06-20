@@ -41,46 +41,44 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
         row.prop(scene_settings, 'turn_off')
         row.prop(scene_settings, 'create_object_folders')
 
-
+        ### OB_SETTINGS ###
         col.separator()
-        col.separator()
-        box = col.box()
-        box.prop(ob_settings, 'use', text='Bake this object ("%s")' %ob.name, toggle=0)
+        box_ob_settings = col.box()
+        box_ob_settings.prop(ob_settings, 'use', text='Bake this object ("%s")' %ob.name, toggle=0)
 
         if ob_settings.use:
-            ### SELECTED TO ACTIVE SETTINGS
-            #box = col.box()
-            box.prop(ob_settings, 'path')
-            row = box.row()
+            box_ob_settings.prop(ob_settings, 'path')
+            row = box_ob_settings.row()
             row.prop(ob_settings, 'use_selected_to_active')
+            row.prop(ob_settings, 'margin')
             if ob_settings.use_selected_to_active:
                 if ob_settings.sources:
                     sources = [s.strip() for s in ob_settings.sources.split(',')]
                     if len(sources) == 1:
                         row.prop(ob_settings, 'align')
 
-                row = box.row()
+                row = box_ob_settings.row()
                 row.prop(ob_settings, 'use_cage')
                 if ob_settings.use_cage:
-                    #row.prop(ob_settings, 'cage_object', icon='OBJECT_DATAMODE')
                     row.prop_search(ob_settings, "cage_object", scene, "objects", text="")
 
-                row=box.row()
+                row = box_ob_settings.row()
                 if ob_settings.use_cage:
                     ray_name = 'Extrusion'
                 else:
                     ray_name = 'Ray Distance'
                 row.prop(ob_settings, 'cage_extrusion', text=ray_name)
 
-                subbox = box.box()
-                row=subbox.row()
+                subbox = box_ob_settings.box()
+                row = subbox.row()
                 row.label('Source Objects:')
                 row.operator('object.set_bbake_sources', icon='FORWARD', text='Set Sources')
-                row=subbox.row()
+                row = subbox.row()
                 if ob_settings.sources:
                     row.prop(ob_settings, 'sources', text='')
 
-            ### AOVs SETTINGS
+            ### AOVs SETTINGS ###
+            col.separator()
             box = col.box()
 
             row = box.row()

@@ -6,7 +6,7 @@ bl_info = {
     "location": "Properties >> Render >> BBake",
     "description": "Batch Baking for Cycles",
     "warning": "",
-    "wiki_url": "https://github.com/florianfelix/render_bbake",
+    "wiki_url": "https://github.com/florianfelix/render_bbake/wiki",
     "tracker_url": "https://github.com/florianfelix/render_bbake/issues",
     "category": "Render",
 }
