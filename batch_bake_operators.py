@@ -59,7 +59,6 @@ def testob(ob):
     bbake = ob.bbake
     ob_settings = bbake.ob_settings
 
-    bakeable = True
     if not ob.type == 'MESH':
         return False
     if not ob_settings.use:
@@ -71,29 +70,31 @@ def testob(ob):
             os.makedirs(path)
         except:
             msg('FAILED to create bake Folder:%s\n for object "%s"\nSkipping.' %(path, ob.name))
-            bakeable = False
+            return False
 
     if not ob.data.uv_layers:
         msg('"%s" has no UV-Layer. Skipping.' %(ob.name))
-        bakeable = False
+        return False
 
     if len(ob.material_slots) == 0:
-        bakeable = False
         msg('"%s" has no materials. Skipping.' %(ob.name))
+        return False
 
     else:
-        bakeable = False
+        has_one_material = False
         for slot in ob.material_slots:
             if slot.material:
-                bakeable = True
+                has_one_material = True
                 break
-        msg('"%s" has no materials. Skipping.' %(ob.name))
+        if not has_one_material:
+            msg('"%s" has no materials. Skipping.' %(ob.name))
+            return False
 
     if ob.hide_render:
-        bakeable = False
         msg('"%s" is set not renderable. Skipping' %(ob.name))
+        return False
 
-    return bakeable
+    return True
 
 def bbake_bake_selected(self, context):
     render = context.scene.render
