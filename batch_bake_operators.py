@@ -35,28 +35,6 @@ class BBake_Setup_Copy_Settings(Operator):
 
 ####################################################################
 
-def set_pass_settings(context, aov):
-    render = context.scene.render
-    bake_settings = render.bake
-
-    bake_settings.use_pass_direct = aov.use_pass_direct
-    bake_settings.use_pass_indirect = aov.use_pass_indirect
-    bake_settings.use_pass_color = aov.use_pass_color
-
-    bake_settings.use_pass_ambient_occlusion = aov.use_pass_ambient_occlusion
-    bake_settings.use_pass_diffuse = aov.use_pass_diffuse
-    bake_settings.use_pass_emit = aov.use_pass_emit
-    bake_settings.use_pass_glossy = aov.use_pass_glossy
-    bake_settings.use_pass_subsurface = aov.use_pass_subsurface
-    bake_settings.use_pass_transmission = aov.use_pass_transmission
-
-    bake_settings.normal_space = aov.normal_space
-    bake_settings.normal_r = aov.normal_r
-    bake_settings.normal_g = aov.normal_g
-    bake_settings.normal_b = aov.normal_b
-
-
-
 def bake_aov(context, ob, aov):
     STARTAOV = time()
     render = context.scene.render
@@ -162,8 +140,8 @@ def bbake_bake_selected(self, context):
         bbake = ob.bbake
         ob_settings = bbake.ob_settings
 
-        #Set scene bake settings to this obs bbake settings
-        set_scene_settings(context, ob.bbake)
+        #Set scene bake settings to this obs ob_settings
+        set_ob_settings(context, ob_settings)
 
         #deselect all obs
         for obj in context.scene.objects:

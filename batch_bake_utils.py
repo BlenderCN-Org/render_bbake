@@ -54,22 +54,37 @@ def bbake_copy_settings(self, context):
                 getattr(bbt, 'ob_settings')[k] = v
 
 
-def set_scene_settings(context, bbake):
-    '''Set scene bake settings to the bake settings of the object'''
-    ob_settings = bbake.ob_settings
+
+def set_ob_settings(context, ob_settings):
     bake_settings = context.scene.render.bake
     bake_settings.use_selected_to_active = ob_settings.use_selected_to_active
-    bake_settings.cage_extrusion = ob_settings.cage_extrusion
-    bake_settings.normal_space = bbake.aov_normal.normal_space
-    bake_settings.normal_r = bbake.aov_normal.normal_r
-    bake_settings.normal_g = bbake.aov_normal.normal_g
-    bake_settings.normal_b = bbake.aov_normal.normal_b
     bake_settings.cage_extrusion = ob_settings.cage_extrusion
     bake_settings.use_cage = ob_settings.use_cage
     bake_settings.cage_object = ob_settings.cage_object
     bake_settings.margin = ob_settings.margin
     bake_settings.use_clear = ob_settings.use_clear
     context.scene.update()
+
+def set_pass_settings(context, aov):
+    render = context.scene.render
+    bake_settings = render.bake
+
+    bake_settings.use_pass_direct = aov.use_pass_direct
+    bake_settings.use_pass_indirect = aov.use_pass_indirect
+    bake_settings.use_pass_color = aov.use_pass_color
+
+    bake_settings.use_pass_ambient_occlusion = aov.use_pass_ambient_occlusion
+    bake_settings.use_pass_diffuse = aov.use_pass_diffuse
+    bake_settings.use_pass_emit = aov.use_pass_emit
+    bake_settings.use_pass_glossy = aov.use_pass_glossy
+    bake_settings.use_pass_subsurface = aov.use_pass_subsurface
+    bake_settings.use_pass_transmission = aov.use_pass_transmission
+
+    bake_settings.normal_space = aov.normal_space
+    bake_settings.normal_r = aov.normal_r
+    bake_settings.normal_g = aov.normal_g
+    bake_settings.normal_b = aov.normal_b
+
 
 def getsize(aov):
     '''Return image size of pass for this object'''
@@ -111,7 +126,7 @@ def setup_bake_node(material, image):
     nodes.active = bake_node
     bake_node.image = image
     bake_node.label = image.name
-    
+
     bpy.context.scene.update()
 
     return bake_node
