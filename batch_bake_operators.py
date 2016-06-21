@@ -110,13 +110,12 @@ def testob(ob):
         msg('"%s" has no materials. Skipping.' %(ob.name))
 
     else:
-        bakeable = True
+        bakeable = False
         for slot in ob.material_slots:
             if slot.material:
                 bakeable = True
-            else:
-                bakeable = False
-                msg('"%s" has no materials. Skipping.' %(ob.name))
+                break
+        msg('"%s" has no materials. Skipping.' %(ob.name))
 
     if ob.hide_render:
         bakeable = False
