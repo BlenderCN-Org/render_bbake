@@ -61,6 +61,11 @@ def bake_aov(context, ob, aov):
     STARTAOV = time()
     render = context.scene.render
     bake_settings = render.bake
+
+    #SET SCENE SETTINGS TO AOV SETTINGS
+    set_pass_settings(context, aov)
+
+    #FILEPATH AND IMAGE SETUP
     filename = '%s_%s' %(ob.name, aov.name)
     image = setup_materials(ob, filename, aov)
 
@@ -70,8 +75,8 @@ def bake_aov(context, ob, aov):
                                 os.path.join(ob.bbake.ob_settings.path, ob.name),
                                 image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
-    #image.save_render(filepath)#not needed here
 
+    #DO THE BAKING
     msg('\nBaking "%s"  - - >  %s' %(ob.name, aov.name))
     context.scene.update()
     bpy.ops.object.bake(type=aov.name.upper(),
@@ -185,8 +190,8 @@ def bbake_bake_selected(self, context):
             msg('\n\n%s\nActive: "%s" --> Selected: %s' %('_'*40, ob.name, str([ob.name for ob in found_sources])))
             #abort object if no sources found
             if not found_sources:
-                    msg('No Source Objects found for %s' %(ob.name))
-                    continue
+                msg('No Source Objects found for %s' %(ob.name))
+                continue
 
             #store single source if available
             if ob_settings.align:
@@ -212,47 +217,36 @@ def bbake_bake_selected(self, context):
 
 
         if bbake.aov_combined.use:
-            set_pass_settings(context, bbake.aov_combined)
             bake_aov(context, ob, bbake.aov_combined)
 
         if bbake.aov_diffuse.use:
-            set_pass_settings(context, bbake.aov_diffuse)
             bake_aov(context, ob, bbake.aov_diffuse)
 
         if bbake.aov_glossy.use:
-            set_pass_settings(context, bbake.aov_glossy)
             bake_aov(context, ob, bbake.aov_glossy)
 
         if bbake.aov_transmission.use:
-            set_pass_settings(context, bbake.aov_transmission)
             bake_aov(context, ob, bbake.aov_transmission)
 
         if bbake.aov_subsurface.use:
-            set_pass_settings(context, bbake.aov_subsurface)
             bake_aov(context, ob, bbake.aov_subsurface)
 
         if bbake.aov_normal.use:
-            set_pass_settings(context, bbake.aov_normal)
             bake_aov(context, ob, bbake.aov_normal)
 
         if bbake.aov_ao.use:
-            set_pass_settings(context, bbake.aov_ao)
             bake_aov(context, ob, bbake.aov_ao)
 
         if bbake.aov_shadow.use:
-            set_pass_settings(context, bbake.aov_shadow)
             bake_aov(context, ob, bbake.aov_shadow)
 
         if bbake.aov_emit.use:
-            set_pass_settings(context, bbake.aov_emit)
             bake_aov(context, ob, bbake.aov_emit)
 
         if bbake.aov_uv.use:
-            set_pass_settings(context, bbake.aov_uv)
             bake_aov(context, ob, bbake.aov_uv)
 
         if bbake.aov_environment.use:
-            set_pass_settings(context, bbake.aov_environment)
             bake_aov(context, ob, bbake.aov_environment)
 
         ### CLEANUP
@@ -266,7 +260,7 @@ def bbake_bake_selected(self, context):
 
         OBTIME = time() - STARTOB
         msg('\nOBJECT: %s Time: %s Seconds' %(ob.name.ljust(13), str(round(OBTIME, 2))))
-        
+
         if context.scene.bbake.turn_off:
             ob.bbake.ob_settings.use = False
         #### OB FINISHED
