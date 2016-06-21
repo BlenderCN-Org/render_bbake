@@ -5,34 +5,6 @@ from .batch_bake_utils import *
 
 import os
 from time import time
-
-####################################################################
-class BBake_Setup_Copy_Settings(Operator):
-    ''''''
-    bl_idname = "object.bbake_copy_settings"
-    bl_label = "BBake Copy Settings to Selected"
-    bl_options = {'REGISTER'}
-    bl_description = "Copy BBake Settings from this object to selected"
-
-    copy_aov = BoolProperty(
-        name='Copy AOVs',
-        default=True,
-        )
-    copy_ob_settings = BoolProperty(
-        name='Copy object Settings',
-        default=False,
-        )
-
-    ##### POLL #####
-    @classmethod
-    def poll(cls, context):
-        return len(context.selected_objects) > 1
-
-    ##### EXECUTE #####
-    def execute(self, context):
-        bbake_copy_settings(self, context)
-        return {'FINISHED'}
-
 ####################################################################
 
 def bake_aov(context, ob, aov):
@@ -317,7 +289,34 @@ class BBake_Set_Sources(Operator):
         bbake_set_sources(self, context)
         return {'FINISHED'}
 
+####################################################################
+class BBake_Setup_Copy_Settings(Operator):
+    ''''''
+    bl_idname = "object.bbake_copy_settings"
+    bl_label = "BBake Copy Settings to Selected"
+    bl_options = {'REGISTER'}
+    bl_description = "Copy BBake Settings from this object to selected"
 
+    copy_aov = BoolProperty(
+        name='Copy AOVs',
+        default=True,
+        )
+    copy_ob_settings = BoolProperty(
+        name='Copy object Settings',
+        default=False,
+        )
+
+    ##### POLL #####
+    @classmethod
+    def poll(cls, context):
+        return len(context.selected_objects) > 1
+
+    ##### EXECUTE #####
+    def execute(self, context):
+        bbake_copy_settings(self, context)
+        return {'FINISHED'}
+
+####################################################################
 def register():
     #print('\nREGISTER:\n', __name__)
     bpy.utils.register_class(BBake_Bake_Selected)
