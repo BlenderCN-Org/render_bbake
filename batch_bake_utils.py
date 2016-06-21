@@ -140,7 +140,28 @@ def setup_materials(ob, filename, aov):
                 setup_bake_node(slot.material, image)
     return image
 
+def add_material(ob):
+    if not ob == bpy.context.scene.objects.active:
+        return None
+    material = bpy.data.materials.new(ob.name)
+    material.use_nodes = True
+    ob.data.materials.append(material)
+    return material
 
+def has_material(ob):
+    for slot in ob.material_slots:
+        if slot.material:
+            return True
+    return False
+
+def add_smart_projection(ob):
+    if not ob == bpy.context.scene.objects.active:
+        return None
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.smart_project(island_margin=0.05)
+    bpy.ops.object.mode_set(mode='OBJECT')
+    return ob.data.uv_layers[0]
 
 def update_image(image, filepath):
     image.source = 'FILE'

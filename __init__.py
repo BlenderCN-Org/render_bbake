@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Cycles Batch Baker",
     "author": "Florian Felix Meyer (tstscr)",
-    "version": (1, 0, 1),
+    "version": (1, 1, 0),
     "blender": (2, 77, 0),
     "location": "Properties >> Render >> BBake",
     "description": "Batch Baking for Cycles",

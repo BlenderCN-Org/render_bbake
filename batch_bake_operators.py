@@ -59,11 +59,15 @@ def testob(ob):
     bbake = ob.bbake
     ob_settings = bbake.ob_settings
 
+    #IS MESH
     if not ob.type == 'MESH':
         return False
+
+    #BBAKE TURNED ON
     if not ob_settings.use:
         return False
 
+    #FILEPATH IS WRITEABLE
     path = bpy.path.abspath(ob_settings.path)
     if not os.path.isdir(path):
         try:
@@ -72,24 +76,21 @@ def testob(ob):
             msg('FAILED to create bake Folder:%s\n for object "%s"\nSkipping.' %(path, ob.name))
             return False
 
+    #ADD UV_LAYER
     if not ob.data.uv_layers:
-        msg('"%s" has no UV-Layer. Skipping.' %(ob.name))
-        return False
-
-    if len(ob.material_slots) == 0:
-        msg('"%s" has no materials. Skipping.' %(ob.name))
-        return False
-
-    else:
-        has_one_material = False
-        for slot in ob.material_slots:
-            if slot.material:
-                has_one_material = True
-                break
-        if not has_one_material:
-            msg('"%s" has no materials. Skipping.' %(ob.name))
+        uv_layer = add_smart_projection(ob)
+        if not uv_layer:
+            msg('"%s": Failed to add UVs. Skipping' %(ob.name))
             return False
 
+    #ADD MATERIAL
+    if not has_material(ob):
+        material = add_material(ob)
+        if not material:
+            msg('"%s": Failed to add Material. Skipping' %(ob.name))
+            return False
+
+    #IS RENDER RESTRICTED
     if ob.hide_render:
         msg('"%s" is set not renderable. Skipping' %(ob.name))
         return False
