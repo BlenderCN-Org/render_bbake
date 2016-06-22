@@ -141,11 +141,15 @@ def setup_materials(ob, filename, aov):
     return image
 
 def add_material(ob):
-    if not ob == bpy.context.scene.objects.active:
-        return None
+    msg('%s: Assigning new Material'%ob.name)
+    context = bpy.context
+    active = context.scene.objects.active
+    if not ob == context.scene.objects.active:
+        context.scene.objects.active = ob
     material = bpy.data.materials.new(ob.name)
     material.use_nodes = True
     ob.data.materials.append(material)
+    context.scene.objects.active = active
     return material
 
 def has_material(ob):
@@ -155,12 +159,16 @@ def has_material(ob):
     return False
 
 def add_smart_projection(ob):
-    if not ob == bpy.context.scene.objects.active:
-        return None
+    msg('%s: Adding UVs'%ob.name)
+    context = bpy.context
+    active = context.scene.objects.active
+    if not ob == context.scene.objects.active:
+        context.scene.objects.active = ob
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.uv.smart_project(island_margin=0.05)
     bpy.ops.object.mode_set(mode='OBJECT')
+    context.scene.objects.active = active
     return ob.data.uv_layers[0]
 
 def update_image(image, filepath):
