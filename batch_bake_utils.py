@@ -102,9 +102,10 @@ def setup_image(filename, aov):
             img.source = 'GENERATED'
         img.generated_height = sizey
         img.generated_width = sizex
+        img.use_generated_float = True
         image = img
     else:
-        image = bpy.data.images.new('bakeimg', sizex, sizey)
+        image = bpy.data.images.new('bakeimg', sizex, sizey, float_buffer=True)
 
     image.name = filename
     image.update()

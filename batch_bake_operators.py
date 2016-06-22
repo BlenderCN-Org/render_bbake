@@ -25,6 +25,7 @@ def bake_aov(context, ob, aov):
                                 os.path.join(ob.bbake.ob_settings.path, ob.name),
                                 image.name + render.file_extension)
     filepath = bpy.path.abspath(filepath)
+    image.filepath = filepath
 
     #DO THE BAKING
     msg('\nBaking "%s"  - - >  %s' %(ob.name, aov.name))
@@ -48,7 +49,7 @@ def bake_aov(context, ob, aov):
                         )
 
 
-    image.save_render(filepath)
+    image.save_render(filepath, context.scene)
     ENDAOV = time() - STARTAOV
     msg('AOV: %s    Time: %s Seconds\n%s' %(aov.name.ljust(13), str(round(ENDAOV, 2)), filepath))
     update_image(image, filepath)
