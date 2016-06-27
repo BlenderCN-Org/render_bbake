@@ -242,6 +242,7 @@ def unregister():
     #print('\nUN-REGISTER:\n', __name__)
     bpy.utils.unregister_class(BBake_Object_Data)
     bpy.utils.unregister_class(BBake_Scene_Data)
+    bpy.utils.unregister_class(BBake_Object_Settings)
 
     bpy.utils.unregister_class(AOV_Diffuse)
     bpy.utils.unregister_class(AOV_Glossy)
