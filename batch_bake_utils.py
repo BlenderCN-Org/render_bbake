@@ -94,8 +94,11 @@ def getsize(aov):
         return aov.dimensions_custom.x, aov.dimensions_custom.y
 
 
-def setup_image(filename, aov):
+def setup_image(ob, aov):
+    render = bpy.context.scene.render
+    filename = '%s_%s' %(ob.name, aov.name)
     sizex, sizey = getsize(aov)
+
     if filename in bpy.data.images:
         img = bpy.data.images[filename]
         if not img.source == 'GENERATED':
@@ -108,8 +111,18 @@ def setup_image(filename, aov):
         image = bpy.data.images.new('bakeimg', sizex, sizey, float_buffer=True)
 
     image.name = filename
+
+    filepath = os.path.join(ob.bbake.ob_settings.path, image.name + render.file_extension)
+    if bpy.context.scene.bbake.create_object_folders:
+        filepath = os.path.join(
+                                os.path.join(ob.bbake.ob_settings.path, ob.name),
+                                image.name + render.file_extension)
+    filepath = bpy.path.abspath(filepath)
+    image.filepath = filepath
+
     image.update()
     return image
+
 
 def setup_bake_node(material, image):
     if not material.use_nodes:
@@ -132,9 +145,9 @@ def setup_bake_node(material, image):
 
     return bake_node
 
-def setup_materials(ob, filename, aov):
+def setup_materials(ob, aov):
 
-    image = setup_image(filename, aov)
+    image = setup_image(ob, aov)
     for slot in ob.material_slots:
         if slot:
             if slot.material:
@@ -172,9 +185,9 @@ def add_smart_projection(ob):
     context.scene.objects.active = active
     return ob.data.uv_layers[0]
 
-def update_image(image, filepath):
+def update_image(image):
     image.source = 'FILE'
-    image.filepath = bpy.path.relpath(filepath)
+    image.filepath = bpy.path.relpath(image.filepath)
     image.reload()
     image.update()
 

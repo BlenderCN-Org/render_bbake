@@ -16,22 +16,13 @@ def bake_aov(context, ob, aov):
     set_pass_settings(context, aov)
 
     #FILEPATH AND IMAGE SETUP
-    filename = '%s_%s' %(ob.name, aov.name)
-    image = setup_materials(ob, filename, aov)
-
-    filepath = os.path.join(ob.bbake.ob_settings.path, image.name + render.file_extension)
-    if context.scene.bbake.create_object_folders:
-        filepath = os.path.join(
-                                os.path.join(ob.bbake.ob_settings.path, ob.name),
-                                image.name + render.file_extension)
-    filepath = bpy.path.abspath(filepath)
-    image.filepath = filepath
+    image = setup_materials(ob, aov)
 
     #DO THE BAKING
     msg('\nBaking "%s"  - - >  %s' %(ob.name, aov.name))
     context.scene.update()
     bpy.ops.object.bake(type=aov.name.upper(),
-                        filepath=filepath,
+                        filepath=image.filepath,
                         save_mode='INTERNAL',
                         width=image.generated_width,
                         height=image.generated_height,
@@ -49,10 +40,10 @@ def bake_aov(context, ob, aov):
                         )
 
 
-    image.save_render(filepath, context.scene)
+    image.save_render(image.filepath, context.scene)
     ENDAOV = time() - STARTAOV
-    msg('AOV: %s    Time: %s Seconds\n%s' %(aov.name.ljust(13), str(round(ENDAOV, 2)), filepath))
-    update_image(image, filepath)
+    msg('AOV: %s    Time: %s Seconds\n%s' %(aov.name.ljust(13), str(round(ENDAOV, 2)), image.filepath))
+    update_image(image)
     ### AOV FINISHED
 
 def testob(ob):
