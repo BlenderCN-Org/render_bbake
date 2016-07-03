@@ -150,11 +150,18 @@ class BBake_Object_Settings(PropertyGroup):
         subtype='PIXEL',
         min=0, soft_min=0,
         max=64, soft_max=64,
-        description='Extends the baked result as a post process filter')
+        description='Extends the baked result as a post process filter',
+        )
     use_clear = BoolProperty(
         name='Clear',
         default=True,
-        description='Clear Images Before baking')
+        description='Clear Images Before baking',
+        )
+    uv_layer = StringProperty(
+        name='UV Layer',
+        description='UV Layer used as baking target'
+        '\n(active if empty)',
+        )
 
 class AOV_Diffuse(PropertyGroup, AOV):
     name = StringProperty(name='name', default='Diffuse')

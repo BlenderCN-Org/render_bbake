@@ -106,7 +106,7 @@ def bbake_bake_selected(self, context):
         ob_settings = bbake.ob_settings
 
         #Set scene bake settings to this obs ob_settings
-        set_ob_settings(context, ob_settings)
+        set_ob_settings(context, ob)
 
         #deselect all obs
         for obj in context.scene.objects:

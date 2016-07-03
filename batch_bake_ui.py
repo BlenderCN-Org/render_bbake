@@ -48,6 +48,7 @@ class BBake_Panel(CyclesButtonsPanel, Panel):
 
         if ob_settings.use:
             box_ob_settings.prop(ob_settings, 'path')
+            box_ob_settings.prop_search(ob_settings, "uv_layer", ob.data, "uv_layers", text="UV Layer")
             row = box_ob_settings.row()
             row.prop(ob_settings, 'use_selected_to_active')
             row.prop(ob_settings, 'margin')

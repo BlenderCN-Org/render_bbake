@@ -53,9 +53,16 @@ def bbake_copy_settings(self, context):
             for k,v in getattr(bbs, 'ob_settings').items():
                 getattr(bbt, 'ob_settings')[k] = v
 
+def set_uv_layer(context, ob):
+    ob_settings = ob.bbake.ob_settings
+    for layer in ob.data.uv_textures:
+        if layer.name == ob_settings.uv_layer:
+            ob.data.uv_textures.active = layer
+            break
 
 
-def set_ob_settings(context, ob_settings):
+def set_ob_settings(context, ob):
+    ob_settings = ob.bbake.ob_settings
     bake_settings = context.scene.render.bake
     bake_settings.use_selected_to_active = ob_settings.use_selected_to_active
     bake_settings.cage_extrusion = ob_settings.cage_extrusion
@@ -63,6 +70,7 @@ def set_ob_settings(context, ob_settings):
     bake_settings.cage_object = ob_settings.cage_object
     bake_settings.margin = ob_settings.margin
     bake_settings.use_clear = ob_settings.use_clear
+    set_uv_layer(context, ob)
     context.scene.update()
 
 def set_pass_settings(context, aov):
